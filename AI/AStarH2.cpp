@@ -11,19 +11,25 @@ struct node{
 	int hValue;
 };
 
-int misplacedTiles(int tile[N][N]){
-	int actVal=1, misTiles=0;
-
-	for(int i=0; i<N; i++){
-		for(int j=0; j<N; j++){
-			if(tile[i][j]!=actVal && !(i==2 && j==2)){
-				misTiles++;
+int getManhattanDistance(int tile[3][3]){
+	int sum=0;
+	int x_val[9]={0,0,0,1,1,1,2,2,2};
+	int y_val[9]={0,1,2,0,1,2,0,1,2};
+	int k=1,i,j;
+	
+	for(i=0;i<3;i++){
+		for(j=0;j<3;j++){
+			if(tile[i][j]!=k && tile[i][j]!=0){
+				sum=sum+abs(x_val[(tile[i][j])-1]-i)+abs(y_val[(tile[i][j])-1]-j);
 			}
-			actVal++;
-		}
+			k++;
+			if(k==9){
+				k=0;
+			}
+		}	
 	}
-
-	return misTiles;
+	
+	return sum;
 }
 
 struct compare{
@@ -117,7 +123,7 @@ node* makeNode(node* curr_head, int currX, int currY, int newX, int newY)
 	new_node->tile[newX][newY]=temp;
 	
 	new_node->gValue=curr_head->gValue+1;
-	new_node->hValue=misplacedTiles(new_node->tile);
+	new_node->hValue=getManhattanDistance(new_node->tile);
 	new_node->fValue=new_node->gValue+new_node->hValue;
 	
 	return new_node;
@@ -147,7 +153,7 @@ int main(int argc, char const *argv[])
 	}
 
 	head->gValue=0;
-	head->hValue=misplacedTiles(head->tile);
+	head->hValue=getManhattanDistance(head->tile);
 	head->fValue=head->gValue+head->hValue;
 
 	printf("hValue = %d\n",head->hValue);
