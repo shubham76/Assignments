@@ -5,6 +5,7 @@
 using namespace std;
 
 struct node{
+	node * parent;
 	int tile [N][N];
 	int level;
 };
@@ -73,6 +74,8 @@ node* makeNode(node* curr_head, int currX, int currY, int newX, int newY){
 
 	node* new_node=(node*)malloc(sizeof(node));
 	
+	new_node->parent=curr_head;
+
 	for(i=0;i<3;i++){
 		for(j=0;j<3;j++){
 			new_node->tile[i][j]=curr_head->tile[i][j];
@@ -106,6 +109,17 @@ bool isFinalState(int tile[N][N]){
 	return true;
 }
 
+void printPath(node *solutionNode){
+	if(solutionNode==NULL){
+		return;
+	}
+
+	printPath(solutionNode->parent);
+	printTiles(solutionNode->tile);
+
+
+}
+
 int main(){
 	node* head=(node*)malloc(sizeof(node));
 
@@ -130,6 +144,7 @@ int main(){
 	}
 
 	head->level=0;
+	head->parent=NULL;
 
 	int steps=0, currX,currY;
 	for(int IDSLimits=0;;IDSLimits++){
@@ -143,7 +158,8 @@ int main(){
 			
 			if(isFinalState(curr_head->tile)){
 				cout<<"The solution is found!.\n";
-				printTiles(curr_head->tile);
+				cout<<"The solution path is as follows.\n";
+				printPath(curr_head);
 				cout<<"The total number of steps required are "<<steps<<"."<<endl;
 				exit(0);
 			}
