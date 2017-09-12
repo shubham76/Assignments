@@ -5,7 +5,11 @@ using namespace std;
 #define N 3
 
 struct node{
-	int tile [3][3];
+	int tile [N][N];
+
+	node * parent;
+
+	int level;
 	int fValue;
 	int gValue;
 	int hValue;
@@ -82,6 +86,20 @@ bool areAllUnique(int tile[N][N]){
 	return true;
 }
 
+void printTiles(int tile[N][N]){
+	
+	cout<<"---------------------------\n";
+
+	for (int i = 0; i < N; ++i){
+		for (int j = 0; j < N; ++j){
+			cout<<tile[i][j]<<"\t";
+		}
+		cout<<endl;
+	}
+
+	cout<<"---------------------------\n";
+}
+
 bool isFinalState(int tile[N][N]){
 	int value=1;
 
@@ -112,6 +130,10 @@ node* makeNode(node* curr_head, int currX, int currY, int newX, int newY)
 		}
 	}
 	
+	new_node->level=curr_head->level+1;
+
+	new_node->parent=curr_head;
+
 	temp=new_node->tile[currX][currY];
 	new_node->tile[currX][currY]=new_node->tile[newX][newY];
 	new_node->tile[newX][newY]=temp;
@@ -122,6 +144,17 @@ node* makeNode(node* curr_head, int currX, int currY, int newX, int newY)
 	
 	return new_node;
 }
+
+void printPath(node *solutionNode){
+	if(solutionNode==NULL){
+		return;
+	}
+
+	printPath(solutionNode->parent);
+	printTiles(solutionNode->tile);
+}
+
+
 
 int main(int argc, char const *argv[])
 {
@@ -136,6 +169,8 @@ int main(int argc, char const *argv[])
 			head->tile[i][j]=temp;
 		}
 	}
+	head->level=0;
+	head->parent=NULL;
 
 	if(!areAllUnique(head->tile)){
 		cout<<"All the values in tile must be unique.\n";
@@ -162,9 +197,14 @@ int main(int argc, char const *argv[])
 		tree.pop();
 
 		if(isFinalState(curr_head->tile)){
-			cout<<"The solution is found!.\n";
+			cout<<"The solution is found!\n";
+			cout<<"The solution path is as follows.\n";
+
+			printPath(curr_head);
+				
+			cout<<"The solution is found at level "<<curr_head->level<<".\n";
 			cout<<"The total number of steps required are "<<steps<<"."<<endl;
-			exit(0);
+			return 0;
 		}
 		else{
 			for(int i=0; i<N; i++){

@@ -5,7 +5,11 @@ using namespace std;
 #define N 3
 
 struct node{
-	int tile [3][3];
+	int tile [N][N];
+
+	node * parent;
+
+	int level;
 	int fValue;
 	int gValue;
 	int hValue;
@@ -118,6 +122,10 @@ node* makeNode(node* curr_head, int currX, int currY, int newX, int newY)
 		}
 	}
 	
+	new_node->level=curr_head->level+1;
+
+	new_node->parent=curr_head;
+
 	temp=new_node->tile[currX][currY];
 	new_node->tile[currX][currY]=new_node->tile[newX][newY];
 	new_node->tile[newX][newY]=temp;
@@ -127,6 +135,29 @@ node* makeNode(node* curr_head, int currX, int currY, int newX, int newY)
 	new_node->fValue=new_node->gValue+new_node->hValue;
 	
 	return new_node;
+}
+
+void printTiles(int tile[N][N]){
+	
+	cout<<"---------------------------\n";
+
+	for (int i = 0; i < N; ++i){
+		for (int j = 0; j < N; ++j){
+			cout<<tile[i][j]<<"\t";
+		}
+		cout<<endl;
+	}
+
+	cout<<"---------------------------\n";
+}
+
+void printPath(node *solutionNode){
+	if(solutionNode==NULL){
+		return;
+	}
+
+	printPath(solutionNode->parent);
+	printTiles(solutionNode->tile);
 }
 
 int main(int argc, char const *argv[])
@@ -152,6 +183,7 @@ int main(int argc, char const *argv[])
 		exit(0);
 	}
 
+	head->level=0;
 	head->gValue=0;
 	head->hValue=getManhattanDistance(head->tile);
 	head->fValue=head->gValue+head->hValue;
@@ -168,9 +200,14 @@ int main(int argc, char const *argv[])
 		tree.pop();
 
 		if(isFinalState(curr_head->tile)){
-			cout<<"The solution is found!.\n";
+			cout<<"The solution is found!\n";
+			cout<<"The solution path is as follows.\n";
+
+			printPath(curr_head);
+				
+			cout<<"The solution is found at level "<<curr_head->level<<".\n";
 			cout<<"The total number of steps required are "<<steps<<"."<<endl;
-			exit(0);
+			return 0;
 		}
 		else{
 			for(int i=0; i<N; i++){

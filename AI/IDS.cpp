@@ -116,8 +116,6 @@ void printPath(node *solutionNode){
 
 	printPath(solutionNode->parent);
 	printTiles(solutionNode->tile);
-
-
 }
 
 int main(){
@@ -157,11 +155,14 @@ int main(){
 			tree.pop();
 			
 			if(isFinalState(curr_head->tile)){
-				cout<<"The solution is found!.\n";
+				cout<<"The solution is found!\n";
 				cout<<"The solution path is as follows.\n";
+
 				printPath(curr_head);
+				
+				cout<<"The solution is found at level "<<curr_head->level<<".\n";
 				cout<<"The total number of steps required are "<<steps<<"."<<endl;
-				exit(0);
+				return 0;
 			}
 			else{
 				if(curr_head->level < IDSLimits){
@@ -176,25 +177,25 @@ int main(){
 					if(currX-1>=0){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX-1,currY);
-						printTiles(new_node->tile);
+						//printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 					if(currY-1>=0){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX,currY-1);
-						printTiles(new_node->tile);
+						//printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 					if(currX+1<=2){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX+1,currY);
-						printTiles(new_node->tile);
+						//printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 					if(currY+1<=2){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX,currY+1);
-						printTiles(new_node->tile);
+						//printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 				}
