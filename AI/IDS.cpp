@@ -36,6 +36,20 @@ bool isSolvable(int tile[N][N]){
 	}
 }
 
+void printTiles(int tile[N][N]){
+	
+	cout<<"---------------------------\n";
+
+	for (int i = 0; i < N; ++i){
+		for (int j = 0; j < N; ++j){
+			cout<<tile[i][j]<<"\t";
+		}
+		cout<<endl;
+	}
+
+	cout<<"---------------------------\n";
+}
+
 bool areAllUnique(int tile[N][N]){
 	int hist[9]={0};
 
@@ -104,7 +118,8 @@ int main(){
 			head->tile[i][j]=temp;
 		}
 	}
-
+	/*cout<<"After taking input : \n";
+	printTiles(head->tile);*/
 	if(!areAllUnique(head->tile)){
 		cout<<"All the values in tile must be unique.\n";
 		exit(0);
@@ -125,9 +140,10 @@ int main(){
 		while(!tree.empty()){
 			node* curr_head=tree.top();
 			tree.pop();
-
+			
 			if(isFinalState(curr_head->tile)){
 				cout<<"The solution is found!.\n";
+				printTiles(curr_head->tile);
 				cout<<"The total number of steps required are "<<steps<<"."<<endl;
 				exit(0);
 			}
@@ -144,21 +160,25 @@ int main(){
 					if(currX-1>=0){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX-1,currY);
+						printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 					if(currY-1>=0){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX,currY-1);
+						printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 					if(currX+1<=2){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX+1,currY);
+						printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 					if(currY+1<=2){
 						steps++;
 						node* new_node=makeNode(curr_head,currX,currY,currX,currY+1);
+						printTiles(new_node->tile);
 						tree.push(new_node);
 					}
 				}
